@@ -8,16 +8,45 @@ from .forms import StudentForm
 
 # Create your views here.
 def index(request):
+  """
+  Renders the index page with a list of all students.
+
+  Args:
+    request: The HTTP request object.
+
+  Returns:
+    A rendered HTML page with the list of all students.
+  """
   return render(request, 'students/index.html', {
     'students': Student.objects.all()
   })
 
 
 def view_student(request, id):
+  """
+  Redirects the user to the 'index' page.
+
+  Args:
+    request: The HTTP request object.
+    id: The ID of the student.
+
+  Returns:
+    HttpResponseRedirect: A redirect response to the 'index' page.
+  """
   return HttpResponseRedirect(reverse('index'))
 
 
 def add(request):
+  """
+  View function for adding a new student.
+
+  Args:
+    request (HttpRequest): The HTTP request object.
+
+  Returns:
+    HttpResponse: The HTTP response object.
+
+  """
   if request.method == 'POST':
     form = StudentForm(request.POST)
     if form.is_valid():
@@ -49,6 +78,19 @@ def add(request):
 
 
 def edit(request, id):
+  """
+  Edit the details of a student with the given ID.
+
+  Args:
+    request (HttpRequest): The HTTP request object.
+    id (int): The ID of the student to be edited.
+
+  Returns:
+    HttpResponse: The HTTP response object.
+
+  Raises:
+    Student.DoesNotExist: If the student with the given ID does not exist.
+  """
   if request.method == 'POST':
     student = Student.objects.get(pk=id)
     form = StudentForm(request.POST, instance=student)
@@ -67,6 +109,16 @@ def edit(request, id):
 
 
 def delete(request, id):
+  """
+  Delete a student record.
+
+  Args:
+    request (HttpRequest): The HTTP request object.
+    id (int): The ID of the student to be deleted.
+
+  Returns:
+    HttpResponseRedirect: Redirects to the 'index' view after deleting the student record.
+  """
   if request.method == 'POST':
     student = Student.objects.get(pk=id)
     student.delete()
